@@ -31,6 +31,8 @@ export const ConvertPage: React.FC = () => {
   const [quality, setQuality] = useState<number>(80);
   const [targetSize, setTargetSize] = useState<string>('');
   const [targetUnit, setTargetUnit] = useState<'KB' | 'MB' | 'GB'>('MB');
+  const [resizeWidth, setResizeWidth] = useState<string>('');
+  const [resizeHeight, setResizeHeight] = useState<string>('');
 
   const [processing, setProcessing] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
@@ -53,6 +55,8 @@ export const ConvertPage: React.FC = () => {
     setError(null);
     setTargetFormat('');
     setTargetSize('');
+    setResizeWidth('');
+    setResizeHeight('');
 
     setFileInfo({
       file,
@@ -89,9 +93,14 @@ export const ConvertPage: React.FC = () => {
         }
       }
 
+      const width = parseInt(resizeWidth, 10);
+      const height = parseInt(resizeHeight, 10);
+
       const conversionResult = await convertFile(uploadedFile, targetFormat, {
         quality: compressionMode === 'quality' ? quality / 100 : undefined,
         maxSizeMB,
+        resizeWidth: !isNaN(width) && width > 0 ? width : undefined,
+        resizeHeight: !isNaN(height) && height > 0 ? height : undefined,
         onProgress: (p) => setProgress(p),
       });
 
@@ -118,6 +127,8 @@ export const ConvertPage: React.FC = () => {
     setProgress(0);
     setError(null);
     setTargetFormat('');
+    setResizeWidth('');
+    setResizeHeight('');
   };
 
   return (
@@ -167,6 +178,11 @@ export const ConvertPage: React.FC = () => {
               onTargetSizeChange={setTargetSize}
               targetUnit={targetUnit}
               onTargetUnitChange={setTargetUnit}
+              isImage={fileInfo?.mimeType?.startsWith('image/')}
+              resizeWidth={resizeWidth}
+              onResizeWidthChange={setResizeWidth}
+              resizeHeight={resizeHeight}
+              onResizeHeightChange={setResizeHeight}
               onConvert={handleConvert}
               canConvert={!!targetFormat}
             />

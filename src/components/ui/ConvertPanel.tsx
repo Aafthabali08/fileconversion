@@ -23,6 +23,12 @@ interface ConvertPanelProps {
   targetUnit: 'KB' | 'MB' | 'GB';
   onTargetUnitChange: (unit: 'KB' | 'MB' | 'GB') => void;
 
+  isImage?: boolean;
+  resizeWidth: string;
+  onResizeWidthChange: (value: string) => void;
+  resizeHeight: string;
+  onResizeHeightChange: (value: string) => void;
+
   onConvert: () => void;
   canConvert: boolean;
 }
@@ -39,6 +45,11 @@ export const ConvertPanel: React.FC<ConvertPanelProps> = ({
   onTargetSizeChange,
   targetUnit,
   onTargetUnitChange,
+  isImage,
+  resizeWidth,
+  onResizeWidthChange,
+  resizeHeight,
+  onResizeHeightChange,
   onConvert,
   canConvert,
 }) => {
@@ -233,6 +244,40 @@ export const ConvertPanel: React.FC<ConvertPanelProps> = ({
             </div>
           )}
         </div>
+
+        {isImage && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+            <span style={labelStyle}>Custom Dimensions (optional)</span>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <div style={{ flex: 1 }}>
+                <GlassInput
+                  type="number"
+                  label="Width (px)"
+                  placeholder="e.g. 1920"
+                  value={resizeWidth}
+                  onChange={(e) => onResizeWidthChange(e.target.value)}
+                  min="1"
+                  fullWidth
+                />
+              </div>
+              <span style={arrowStyle}>×</span>
+              <div style={{ flex: 1 }}>
+                <GlassInput
+                  type="number"
+                  label="Height (px)"
+                  placeholder="e.g. 1080"
+                  value={resizeHeight}
+                  onChange={(e) => onResizeHeightChange(e.target.value)}
+                  min="1"
+                  fullWidth
+                />
+              </div>
+            </div>
+            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>
+              Leave blank to keep the original size. Set both to force an exact output size.
+            </span>
+          </div>
+        )}
 
         <GlassButton
           variant="primary"

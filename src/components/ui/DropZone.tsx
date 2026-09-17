@@ -94,7 +94,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
 
   return (
     <motion.div
-      {...getRootProps()}
+      {...(getRootProps() as unknown as Record<string, unknown>)}
       style={containerStyle}
       whileHover={{ borderColor: 'rgba(37, 99, 235, 0.5)' }}
       whileTap={{ scale: 0.99 }}

@@ -133,11 +133,11 @@ export const GameLoader: React.FC<GameLoaderProps> = ({
             cy={p.y}
             r={p.size}
             fill="#2563eb"
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0, x: 0, y: 0 }}
             animate={{
               opacity: [0, 0.8, 0],
-              cx: [p.x, p.x + Math.sin(p.id) * 30, p.x],
-              cy: [p.y, p.y - 20 - p.id * 2, p.y],
+              x: [0, Math.sin(p.id) * 30, 0],
+              y: [0, -20 - p.id * 2, 0],
             }}
             transition={{
               duration: p.duration,
@@ -218,7 +218,7 @@ export const GameLoader: React.FC<GameLoaderProps> = ({
             r="5"
             fill="#2563eb"
             style={{ filter: 'drop-shadow(0 0 8px rgba(37, 99, 235, 0.8))' }}
-            animate={{ r: [4, 6, 4] }}
+            animate={{ scale: [0.8, 1.2, 0.8] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           />
         </svg>

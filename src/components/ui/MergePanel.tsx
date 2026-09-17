@@ -48,6 +48,15 @@ export const MergePanel: React.FC<MergePanelProps> = ({
     { value: 'mp4', label: 'Merge to MP4 Video (.mp4)' },
   ];
 
+  const mergeHints: Record<string, string> = {
+    pdf: 'All files must be PDFs, or all images.',
+    zip: 'Any combination of files is fine — they are archived as-is.',
+    docx: 'All files must be TXT, DOCX, or PDF — their text is combined.',
+    ppt: 'All files must be images — one slide per image.',
+    txt: 'All files must be TXT, DOCX, or PDF — their text is combined.',
+    mp4: 'All files must be videos — they are concatenated in order.',
+  };
+
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
@@ -122,6 +131,11 @@ export const MergePanel: React.FC<MergePanelProps> = ({
           onChange={(e) => onMergeTypeChange(e.target.value)}
           fullWidth
         />
+        {mergeHints[mergeType] && (
+          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginTop: '-8px' }}>
+            {mergeHints[mergeType]}
+          </span>
+        )}
 
         {/* Compression Settings Section (mainly for images/PDFs if supported) */}
         {mergeType === 'pdf' && (
