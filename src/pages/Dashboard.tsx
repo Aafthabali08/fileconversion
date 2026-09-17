@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { RefreshCw, GitMerge, FileSearch, Sparkles, Zap, Shield } from 'lucide-react';
+import { RefreshCw, GitMerge, FileSearch, Sparkles, Zap, Shield, Shrink } from 'lucide-react';
 import { GlassCard } from '../components/ui/GlassCard';
 
 export const Dashboard: React.FC = () => {
@@ -119,6 +119,14 @@ export const Dashboard: React.FC = () => {
       icon: <GitMerge size={30} />,
       color: '#8b5cf6',
       path: '/merge',
+    },
+    {
+      id: 'reduce',
+      title: 'Reduce Size',
+      description: 'Detects the format and shrinks images, audio, video, or PDFs to a custom target size.',
+      icon: <Shrink size={30} />,
+      color: '#10b981',
+      path: '/reduce',
     },
   ];
 

@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Gem, LayoutDashboard, RefreshCw, GitMerge } from 'lucide-react';
+import { Gem, LayoutDashboard, RefreshCw, GitMerge, Shrink } from 'lucide-react';
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/convert', icon: RefreshCw, label: 'Convert' },
   { to: '/merge', icon: GitMerge, label: 'Merge' },
+  { to: '/reduce', icon: Shrink, label: 'Reduce Size' },
 ];
 
 export const Sidebar: React.FC = () => {

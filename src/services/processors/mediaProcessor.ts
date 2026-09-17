@@ -121,6 +121,70 @@ export async function concatVideos(files: File[], onProgress?: (p: number) => vo
   return new Blob([data], { type: 'video/mp4' });
 }
 
+/**
+ * Re-encodes audio/video at a computed bitrate so the output lands at or
+ * under targetBytes, keeping the original container/codec family.
+ */
+export async function reduceMediaSize(
+  file: File,
+  targetBytes: number,
+  onProgress?: (p: number) => void
+): Promise<Blob> {
+  const isAudioOnly = file.type.startsWith('audio/');
+  const duration = await getMediaDuration(file);
+  if (!duration || !isFinite(duration) || duration <= 0) {
+    throw new Error('Could not read this media file\'s duration.');
+  }
+
+  const instance = await loadFFmpeg();
+  const progressHandler = onProgress
+    ? ({ progress }: { progress: number }) => onProgress(progress * 100)
+    : undefined;
+  if (progressHandler) instance.on('progress', progressHandler);
+
+  const ext = file.name.split('.').pop() || (isAudioOnly ? 'mp3' : 'mp4');
+  const inputName = `reduce_input_${Date.now()}.${ext}`;
+  const outputName = `reduce_output_${Date.now()}.${ext}`;
+
+  // Reserve ~5% headroom for container/muxing overhead.
+  const totalBitrate = Math.floor(((targetBytes * 8) / duration) * 0.95);
+
+  let videoBitrate: number | null = null;
+  let audioBitrate: number;
+
+  if (isAudioOnly) {
+    audioBitrate = Math.max(32_000, Math.min(totalBitrate, 320_000));
+  } else {
+    audioBitrate = Math.max(32_000, Math.min(128_000, Math.floor(totalBitrate * 0.15)));
+    videoBitrate = Math.max(50_000, totalBitrate - audioBitrate);
+  }
+
+  let data: Awaited<ReturnType<typeof instance.readFile>>;
+  try {
+    await instance.writeFile(inputName, await fetchFile(file));
+
+    const args = ['-i', inputName];
+    if (videoBitrate) {
+      args.push('-b:v', `${videoBitrate}`, '-maxrate', `${videoBitrate}`, '-bufsize', `${videoBitrate * 2}`);
+    } else {
+      args.push('-vn');
+    }
+    args.push('-b:a', `${audioBitrate}`, outputName);
+
+    const exitCode = await instance.exec(args);
+    if (exitCode !== 0) {
+      throw new Error('ffmpeg failed to reduce this file\'s size.');
+    }
+    data = await instance.readFile(outputName);
+  } finally {
+    if (progressHandler) instance.off('progress', progressHandler);
+    await instance.deleteFile(inputName).catch(() => {});
+    await instance.deleteFile(outputName).catch(() => {});
+  }
+
+  return new Blob([data], { type: file.type || (isAudioOnly ? 'audio/mpeg' : 'video/mp4') });
+}
+
 export async function getMediaDuration(file: File): Promise<number> {
   return new Promise((resolve) => {
     const url = URL.createObjectURL(file);

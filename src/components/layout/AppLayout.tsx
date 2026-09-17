@@ -37,6 +37,8 @@ export const AppLayout: React.FC = () => {
         return 'Convert Files';
       case '/merge':
         return 'Merge Files';
+      case '/reduce':
+        return 'Reduce Size';
       default:
         return 'GlassForge';
     }
