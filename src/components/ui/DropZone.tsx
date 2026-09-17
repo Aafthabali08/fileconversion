@@ -94,14 +94,14 @@ export const DropZone: React.FC<DropZoneProps> = ({
 
   return (
     <motion.div
-      {...(getRootProps() as any)}
-      style={containerStyle as any}
+      {...getRootProps()}
+      style={containerStyle}
       whileHover={{ borderColor: 'rgba(37, 99, 235, 0.5)' }}
       whileTap={{ scale: 0.99 }}
     >
       <input {...getInputProps()} />
       <motion.div
-        style={iconContainerStyle as any}
+        style={iconContainerStyle}
         animate={isActive ? { scale: 1.1, y: -4 } : { scale: 1, y: 0 }}
         transition={{ duration: 0.2 }}
       >

@@ -164,14 +164,14 @@ export const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
         )}
         {!loading && icon && (
           <motion.span
-            style={{ display: 'flex', alignItems: 'center' } as any}
+            style={{ display: 'flex', alignItems: 'center' }}
             animate={isHovered && !isDisabled ? { rotate: [0, -10, 10, 0] } : {}}
             transition={{ duration: 0.4 }}
           >
             {icon}
           </motion.span>
         )}
-        <span style={{ position: 'relative', zIndex: 1 } as any}>{children as React.ReactNode}</span>
+        <span style={{ position: 'relative', zIndex: 1 }}>{children as React.ReactNode}</span>
       </motion.button>
     );
   }
